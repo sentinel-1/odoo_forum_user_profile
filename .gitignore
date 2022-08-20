@@ -4,6 +4,9 @@ secret.json
 env_*/
 .jupyter/
 
+*.orig
+*.bak
+
 # Automatically generated html template for nbconvert
 OGP_classic/
 
