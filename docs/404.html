@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="robots" content="noindex, nofollow">
+  <title>404 Not Found</title>
+  <meta name="description" content="404 Not Found">
+  <style type="text/css">
+    .container {
+      margin-right: auto;
+      margin-left: auto;
+      margin-bottom: 3em;
+      width: 100%;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      text-align: center;
+    }
+
+    .display-5 {
+      font-size: calc(1.425rem + 2.1vw);
+      font-weight: 300;
+      line-height: 1.2;
+    }
+
+    .lead {
+      font-size: 1.25rem;
+      font-weight: 300;
+    }
+
+    .text-center {
+      text-align: center !important;
+    }
+
+    h1,
+    h2,
+    h3,
+    h4,
+    h5,
+    h6 {
+      margin-bottom: .5rem;
+    }
+
+    .fw-bold {
+      font-weight: 700 !important;
+    }
+
+    .btn {
+      display: inline-block;
+      font-weight: 400;
+      line-height: 1.5;
+      color: #212529;
+      text-align: center;
+      text-decoration: none;
+      vertical-align: middle;
+      cursor: pointer;
+      -webkit-user-select: none;
+      -moz-user-select: none;
+      user-select: none;
+      background-color: transparent;
+      border: 1px solid transparent;
+      padding: .375rem .75rem;
+      font-size: 1rem;
+      border-radius: .25rem;
+      transition: color .15s ease-in-out, background-color .15s ease-in-out, border-color .15s ease-in-out, box-shadow .15s ease-in-out;
+    }
+
+    .btn-outline-success {
+      color: #198754;
+      border-color: #198754;
+    }
+
+    .btn-outline-success:hover,
+    .btn-outline-success:active {
+      color: #fff;
+      background-color: #198754;
+      border-color: #198754;
+    }
+
+    .btn-outline-success:focus {
+      box-shadow: 0 0 0 .25rem rgba(25, 135, 84, .5);
+    }
+
+    .btn-lg {
+      padding: .5rem 1rem;
+      font-size: 1.25rem;
+      border-radius: .3rem;
+    }
+
+    .card {
+      position: relative;
+      display: flex;
+      flex-direction: column;
+      min-width: 0;
+      word-wrap: break-word;
+      background-color: #fff;
+      background-clip: border-box;
+      border: 1px solid rgba(0, 0, 0, .125);
+      border-radius: .25rem;
+    }
+
+    .card-body {
+      flex: 1 1 auto;
+      padding: 1rem 1rem;
+    }
+
+    .card-title {
+      margin-bottom: .5rem;
+    }
+
+    p {
+      margin-top: 0;
+      margin-bottom: 1rem;
+    }
+
+    .card>* {
+      text-align: left;
+    }
+
+    .container .card {
+      margin-bottom: 2.4rem;
+    }
+
+    body {
+      padding-top: 3rem;
+      padding-bottom;
+      3rem;
+    }
+
+  </style>
+</head>
+
+<body class="py-5" onload="javascript:loadDomain();">
+  <div class="container">
+    <div class="text-center my-4">
+      <h1 class="display-5">😵</h1>
+      <h1 class="display-5 fw-bold">404 Not Found</h1>
+      <p class="lead">We couldn't find what you're looking for on
+        <em><span id="display-domain"></span></em>.
+      </p>
+      <a class="btn btn-outline-success btn-lg" href="/" role="button">Go to Homepage</a>
+    </div>
+  </div>
+  <div class="container">
+    <div class="card" style="max-width: 24rem;">
+      <div class="card-body">
+        <h2 class="card-title">What happened?</h2>
+        <p class="lead">A 404 error status implies that the file or page that you're looking for could not be found.</p>
+      </div>
+    </div>
+    <div class="card" style="max-width: 24rem;">
+      <div class="card-body">
+        <h2 class="card-title">What can I do?</h2>
+        <p class="lead">Please use your browser's back button and check that you're in the right place.</p>
+      </div>
+    </div>
+  </div>
+  <script type="text/javascript">
+    function loadDomain() {
+        document.getElementById("display-domain").innerHTML = document.domain;
+    }
+</script>
+</body>
+
+</html>
