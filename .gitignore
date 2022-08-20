@@ -1,3 +1,16 @@
+data/
+secret.json
+
+env_*/
+.jupyter/
+
+# Automatically generated html template for nbconvert
+OGP_classic/
+
+# macOS garbage
+.DS_Store
+._*
+
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]
