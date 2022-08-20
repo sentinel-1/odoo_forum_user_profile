@@ -7,4 +7,4 @@ NOTE: the `secret.json` file template is provided here for your convenience, you
 ```
 git update-index --assume-unchanged secret.json
 ```
-command once in your clone of the git repository in order to ignore this file and easily exclude your credentials from source control.
+command once in your clone of the git repository in order to ignore this file and easily exclude your credentials from source control. Then you can write your credentials safely into the `secret.json` file.
