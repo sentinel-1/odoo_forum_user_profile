@@ -12,7 +12,7 @@
 <meta property="og:image:height" content="987" />
     
 <meta property="article:published_time" content="2022-08-20T09:59:43+00:00" />
-<meta property="article:modified_time"  content="2022-08-20T10:32:18+00:00" />
+<meta property="article:modified_time"  content="2022-08-27T15:59:43+00:00" />
 <meta property="article:publisher"      content="https://sentinel-1.github.io" />
 <meta property="article:author"         content="https://github.com/sentinel-1" />
 <meta property="article:section"        content="datascience" />
@@ -13155,6 +13155,7 @@ d="M 288,0 574,288 511,288 511,511 352,511 352,352 223,352 223,511 62,511 64,288
 <center>
     <img src="images/OdooProfileScreenshot.png" alt="Odoo Community Forum Profile Screenshot" style="min-width: 300px;width: 50%;" />
 </center>
+
 </div>
 </div>
 </div>
@@ -13192,7 +13193,7 @@ d="M 288,0 574,288 511,288 511,511 352,511 352,352 223,352 223,511 62,511 64,288
 
 <div class="output_subarea output_stream output_stdout output_text">
 <pre>
-Notebook START time: 2022-08-20 10:17:16.118253 UTC
+Notebook START time: 2022-08-27 15:14:55.868153 UTC
 
 </pre>
 </div>
@@ -13308,6 +13309,10 @@ Notebook START time: 2022-08-20 10:17:16.118253 UTC
 <span class="kn">import</span> <span class="nn">time</span>
 <span class="kn">from</span> <span class="nn">pathlib</span> <span class="kn">import</span> <span class="n">Path</span>
 <span class="kn">import</span> <span class="nn">json</span>
+<span class="kn">import</span> <span class="nn">io</span>
+<span class="kn">import</span> <span class="nn">sys</span>
+<span class="kn">from</span> <span class="nn">contextlib</span> <span class="kn">import</span> <span class="n">redirect_stderr</span>
+<span class="kn">from</span> <span class="nn">IPython.display</span> <span class="kn">import</span> <span class="n">clear_output</span>
 </pre></div>
 
     </div>
@@ -13329,6 +13334,27 @@ Notebook START time: 2022-08-20 10:17:16.118253 UTC
 </div>
 
 </div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[5]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="kn">import</span> <span class="nn">importlib</span>
+
+<span class="k">if</span> <span class="n">importlib</span><span class="o">.</span><span class="n">util</span><span class="o">.</span><span class="n">find_spec</span><span class="p">(</span><span class="s1">'ipywidgets'</span><span class="p">)</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+    <span class="kn">from</span> <span class="nn">tqdm.auto</span> <span class="kn">import</span> <span class="n">tqdm</span>
+<span class="k">else</span><span class="p">:</span>
+    <span class="kn">from</span> <span class="nn">tqdm</span> <span class="kn">import</span> <span class="n">tqdm</span>
+    
+    <span class="k">if</span> <span class="n">VERBOSE</span><span class="p">:</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">"No ipywidgets found, using simple tqdm."</span><span class="p">)</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+</div>
 <div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
 </div><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
@@ -13339,7 +13365,7 @@ Notebook START time: 2022-08-20 10:17:16.118253 UTC
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[5]:</div>
+<div class="prompt input_prompt">In&nbsp;[6]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="s2">"secret.json"</span><span class="p">,</span> <span class="s2">"r"</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
@@ -13360,7 +13386,7 @@ Notebook START time: 2022-08-20 10:17:16.118253 UTC
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[6]:</div>
+<div class="prompt input_prompt">In&nbsp;[7]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="n">USER_ID</span> <span class="o">=</span> <span class="n">s</span><span class="p">[</span><span class="s2">"user_id"</span><span class="p">]</span>
@@ -13373,7 +13399,7 @@ Notebook START time: 2022-08-20 10:17:16.118253 UTC
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[7]:</div>
+<div class="prompt input_prompt">In&nbsp;[8]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="n">USER_EMAIL</span><span class="p">,</span> <span class="n">USER_PASSWORD</span> <span class="o">=</span> <span class="n">s</span><span class="p">[</span><span class="s2">"email"</span><span class="p">],</span> <span class="n">s</span><span class="p">[</span><span class="s2">"password"</span><span class="p">]</span>
@@ -13386,7 +13412,7 @@ Notebook START time: 2022-08-20 10:17:16.118253 UTC
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[8]:</div>
+<div class="prompt input_prompt">In&nbsp;[9]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="n">user_data_dir</span> <span class="o">=</span> <span class="n">Path</span><span class="o">.</span><span class="n">cwd</span><span class="p">()</span> <span class="o">/</span> <span class="s2">"data"</span> <span class="o">/</span> <span class="nb">str</span><span class="p">(</span><span class="n">USER_ID</span><span class="p">)</span>
@@ -13399,7 +13425,7 @@ Notebook START time: 2022-08-20 10:17:16.118253 UTC
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[9]:</div>
+<div class="prompt input_prompt">In&nbsp;[10]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="k">if</span> <span class="n">user_data_dir</span><span class="o">.</span><span class="n">is_dir</span><span class="p">():</span>
@@ -13435,7 +13461,7 @@ Notebook START time: 2022-08-20 10:17:16.118253 UTC
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[10]:</div>
+<div class="prompt input_prompt">In&nbsp;[11]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="n">base_URL</span> <span class="o">=</span> <span class="s2">"https://www.odoo.com"</span>
@@ -13455,7 +13481,7 @@ Notebook START time: 2022-08-20 10:17:16.118253 UTC
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[11]:</div>
+<div class="prompt input_prompt">In&nbsp;[12]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="n">session</span> <span class="o">=</span> <span class="n">requests</span><span class="o">.</span><span class="n">Session</span><span class="p">()</span>
@@ -13468,15 +13494,15 @@ Notebook START time: 2022-08-20 10:17:16.118253 UTC
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[12]:</div>
+<div class="prompt input_prompt">In&nbsp;[13]:</div>
 <div class="inner_cell">
     <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="k">def</span> <span class="nf">raise_on_failure</span><span class="p">(</span><span class="n">response</span><span class="p">):</span>
+<div class=" highlight hl-ipython3"><pre><span></span><span class="k">def</span> <span class="nf">raise_on_failure</span><span class="p">(</span><span class="n">response</span><span class="p">,</span> <span class="n">silent</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
     <span class="n">status_msg</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">"HTTP response status code: </span><span class="si">{</span><span class="n">response</span><span class="o">.</span><span class="n">status_code</span><span class="si">}</span><span class="s2">"</span>
 
     <span class="k">if</span> <span class="ow">not</span> <span class="n">response</span><span class="o">.</span><span class="n">ok</span><span class="p">:</span>
         <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="n">status_msg</span><span class="p">)</span>
-    <span class="k">elif</span> <span class="n">VERBOSE</span><span class="p">:</span>
+    <span class="k">elif</span> <span class="n">VERBOSE</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">silent</span><span class="p">:</span>
         <span class="nb">print</span><span class="p">(</span><span class="n">status_msg</span><span class="p">)</span>
     <span class="k">return</span> <span class="n">response</span>
 
@@ -13490,7 +13516,7 @@ Notebook START time: 2022-08-20 10:17:16.118253 UTC
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[13]:</div>
+<div class="prompt input_prompt">In&nbsp;[14]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="n">soup</span> <span class="o">=</span> <span class="n">BeautifulSoup</span><span class="p">(</span><span class="n">response</span><span class="o">.</span><span class="n">text</span><span class="p">)</span>
@@ -13503,7 +13529,7 @@ Notebook START time: 2022-08-20 10:17:16.118253 UTC
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[14]:</div>
+<div class="prompt input_prompt">In&nbsp;[15]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="n">csrf_input</span> <span class="o">=</span> <span class="p">(</span><span class="n">soup</span>
@@ -13519,7 +13545,7 @@ Notebook START time: 2022-08-20 10:17:16.118253 UTC
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[15]:</div>
+<div class="prompt input_prompt">In&nbsp;[16]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="n">login_payload</span><span class="p">[</span><span class="s1">'csrf_token'</span><span class="p">]</span> <span class="o">=</span> <span class="n">csrf_input</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"value"</span><span class="p">)</span>
@@ -13532,7 +13558,7 @@ Notebook START time: 2022-08-20 10:17:16.118253 UTC
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[16]:</div>
+<div class="prompt input_prompt">In&nbsp;[17]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="k">if</span> <span class="n">VERBOSE</span><span class="p">:</span>
@@ -13546,7 +13572,7 @@ Notebook START time: 2022-08-20 10:17:16.118253 UTC
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[17]:</div>
+<div class="prompt input_prompt">In&nbsp;[18]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="n">response</span> <span class="o">=</span> <span class="n">raise_on_failure</span><span class="p">(</span><span class="n">session</span><span class="o">.</span><span class="n">post</span><span class="p">(</span><span class="n">login_URL</span><span class="p">,</span> <span class="n">data</span><span class="o">=</span><span class="n">login_payload</span><span class="p">))</span>
@@ -13559,7 +13585,7 @@ Notebook START time: 2022-08-20 10:17:16.118253 UTC
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[18]:</div>
+<div class="prompt input_prompt">In&nbsp;[19]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="n">soup</span> <span class="o">=</span> <span class="n">BeautifulSoup</span><span class="p">(</span><span class="n">response</span><span class="o">.</span><span class="n">text</span><span class="p">)</span>
@@ -13592,14 +13618,14 @@ Notebook START time: 2022-08-20 10:17:16.118253 UTC
 <li>Next rank icon URL</li>
 <li>Next rank progress (%)</li>
 </ul>
-<p>Data collected in this section is saved locally into the <code>data/"User ID"/user_profile.json</code> file.</p>
+<p>Data collected in this section is saved locally into the <code>data/&quot;User ID&quot;/user_profile.json</code> file.</p>
 
 </div>
 </div>
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[19]:</div>
+<div class="prompt input_prompt">In&nbsp;[20]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="k">def</span> <span class="nf">add_scheme_to_url</span><span class="p">(</span><span class="n">url</span><span class="p">):</span>
@@ -13613,7 +13639,7 @@ Notebook START time: 2022-08-20 10:17:16.118253 UTC
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[20]:</div>
+<div class="prompt input_prompt">In&nbsp;[21]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="n">user_profile</span> <span class="o">=</span> <span class="p">{</span>
@@ -13634,7 +13660,7 @@ Notebook START time: 2022-08-20 10:17:16.118253 UTC
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[21]:</div>
+<div class="prompt input_prompt">In&nbsp;[22]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="n">user_profile</span><span class="p">[</span><span class="s2">"Name"</span><span class="p">]</span> <span class="o">=</span> <span class="n">soup</span><span class="o">.</span><span class="n">select</span><span class="p">(</span>
@@ -13731,7 +13757,7 @@ Notebook START time: 2022-08-20 10:17:16.118253 UTC
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[22]:</div>
+<div class="prompt input_prompt">In&nbsp;[23]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="n">profile_data_file</span> <span class="o">=</span> <span class="n">user_data_dir</span><span class="o">/</span><span class="s2">"user_profile.json"</span>
@@ -13755,14 +13781,14 @@ Notebook START time: 2022-08-20 10:17:16.118253 UTC
 <li>Badge name</li>
 <li>URL of the icon used to for the badge</li>
 </ul>
-<p>Data collected in this section is saved locally into the <code>data/"User ID"/user_badges.json</code> file.</p>
+<p>Data collected in this section is saved locally into the <code>data/&quot;User ID&quot;/user_badges.json</code> file.</p>
 
 </div>
 </div>
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[23]:</div>
+<div class="prompt input_prompt">In&nbsp;[24]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="n">user_badges</span> <span class="o">=</span> <span class="p">[{</span>
@@ -13783,7 +13809,7 @@ Notebook START time: 2022-08-20 10:17:16.118253 UTC
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[24]:</div>
+<div class="prompt input_prompt">In&nbsp;[25]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">user_data_dir</span><span class="o">/</span><span class="s2">"user_badges.json"</span><span class="p">,</span> <span class="s2">"w"</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
@@ -13812,42 +13838,29 @@ Notebook START time: 2022-08-20 10:17:16.118253 UTC
 <li>Title of the question</li>
 <li>Content of the question (i.e. the aqcual question)</li>
 </ul>
-<p>Data collected in this section is saved locally into the <code>data/"User ID"/related_questions.json</code> file.</p>
+<p>Data collected in this section is saved locally into the <code>data/&quot;User ID&quot;/related_questions.json</code> file.</p>
 
 </div>
 </div>
-</div>
-<div class="cell border-box-sizing code_cell rendered">
-<div class="input">
-<div class="prompt input_prompt">In&nbsp;[25]:</div>
-<div class="inner_cell">
-    <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="k">if</span> <span class="n">VERBOSE</span><span class="p">:</span>
-    <span class="nb">print</span><span class="p">(</span><span class="s2">"Number of related questions:"</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">soup</span><span class="o">.</span><span class="n">select</span><span class="p">(</span><span class="s2">"#questions .card"</span><span class="p">)))</span>
-</pre></div>
-
-    </div>
-</div>
-</div>
-
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
 <div class="prompt input_prompt">In&nbsp;[26]:</div>
 <div class="inner_cell">
     <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="o">%%capture</span>
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">related_questions</span> <span class="o">=</span> <span class="p">{}</span>
 
-<span class="n">related_questions</span> <span class="o">=</span> <span class="p">{}</span>
 
 <span class="k">for</span> <span class="n">question_section</span> <span class="ow">in</span> <span class="n">soup</span><span class="o">.</span><span class="n">select</span><span class="p">(</span><span class="s2">"#questions &gt;*"</span><span class="p">):</span>
     <span class="n">section_name</span> <span class="o">=</span> <span class="n">question_section</span><span class="o">.</span><span class="n">select_one</span><span class="p">(</span><span class="s2">"h5:first-child"</span><span class="p">)</span><span class="o">.</span><span class="n">text</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span>
     <span class="n">related_questions</span><span class="p">[</span><span class="n">section_name</span><span class="p">]</span> <span class="o">=</span> <span class="p">[]</span>
-
-    <span class="k">for</span> <span class="n">q</span> <span class="ow">in</span> <span class="n">question_section</span><span class="o">.</span><span class="n">select</span><span class="p">(</span><span class="s2">".card"</span><span class="p">):</span>
+    <span class="n">question_cards</span> <span class="o">=</span> <span class="n">question_section</span><span class="o">.</span><span class="n">select</span><span class="p">(</span><span class="s2">".card"</span><span class="p">)</span>
+    
+    <span class="k">for</span> <span class="n">q</span> <span class="ow">in</span> <span class="n">tqdm</span><span class="p">(</span><span class="n">question_cards</span><span class="p">,</span> <span class="n">desc</span><span class="o">=</span><span class="sa">f</span><span class="s1">'Section of "</span><span class="si">{</span><span class="n">section_name</span><span class="si">}</span><span class="s1">"'</span><span class="p">,</span>
+                  <span class="n">total</span><span class="o">=</span><span class="nb">len</span><span class="p">(</span><span class="n">question_cards</span><span class="p">),</span> <span class="n">dynamic_ncols</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">miniters</span><span class="o">=</span><span class="mi">1</span><span class="p">):</span>
         <span class="n">time</span><span class="o">.</span><span class="n">sleep</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">randint</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">4</span><span class="p">))</span>  <span class="c1"># rate limit just in case, be kind</span>
         <span class="n">q_url</span> <span class="o">=</span> <span class="n">urllib</span><span class="o">.</span><span class="n">parse</span><span class="o">.</span><span class="n">urljoin</span><span class="p">(</span><span class="n">base_URL</span><span class="p">,</span> <span class="n">q</span><span class="o">.</span><span class="n">select_one</span><span class="p">(</span><span class="s2">"a"</span><span class="p">)</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"href"</span><span class="p">))</span>
-        <span class="n">response</span> <span class="o">=</span> <span class="n">raise_on_failure</span><span class="p">(</span><span class="n">session</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">q_url</span><span class="p">))</span>
+        <span class="n">response</span> <span class="o">=</span> <span class="n">raise_on_failure</span><span class="p">(</span><span class="n">session</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">q_url</span><span class="p">),</span> <span class="n">silent</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
         <span class="n">q_soup</span> <span class="o">=</span> <span class="n">BeautifulSoup</span><span class="p">(</span><span class="n">response</span><span class="o">.</span><span class="n">text</span><span class="p">)</span>
         <span class="n">related_questions</span><span class="p">[</span><span class="n">section_name</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">({</span>
             <span class="s2">"URL"</span><span class="p">:</span> <span class="n">q_url</span><span class="p">,</span>
@@ -13861,6 +13874,9 @@ Notebook START time: 2022-08-20 10:17:16.118253 UTC
             <span class="k">break</span>
     <span class="k">if</span> <span class="n">QUICK_DEBUG_RUN</span><span class="p">:</span>
         <span class="k">break</span>
+
+<span class="k">if</span> <span class="ow">not</span> <span class="n">VERBOSE</span><span class="p">:</span>
+    <span class="n">clear_output</span><span class="p">()</span>
 </pre></div>
 
     </div>
@@ -13871,6 +13887,20 @@ Notebook START time: 2022-08-20 10:17:16.118253 UTC
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
 <div class="prompt input_prompt">In&nbsp;[27]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="k">if</span> <span class="n">VERBOSE</span><span class="p">:</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">"Number of related questions:"</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">soup</span><span class="o">.</span><span class="n">select</span><span class="p">(</span><span class="s2">"#questions .card"</span><span class="p">)))</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[28]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="k">if</span> <span class="n">VERBOSE</span><span class="p">:</span>
@@ -13890,7 +13920,7 @@ Notebook START time: 2022-08-20 10:17:16.118253 UTC
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[28]:</div>
+<div class="prompt input_prompt">In&nbsp;[29]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">user_data_dir</span><span class="o">/</span><span class="s2">"related_questions.json"</span><span class="p">,</span> <span class="s2">"w"</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
@@ -13920,39 +13950,29 @@ Notebook START time: 2022-08-20 10:17:16.118253 UTC
 </ul>
 </li>
 </ul>
-<p>Data collected in this section is saved locally into the <code>data/"User ID"/answers.json</code> file.</p>
+<p>Data collected in this section is saved locally into the <code>data/&quot;User ID&quot;/answers.json</code> file.</p>
 
 </div>
 </div>
-</div>
-<div class="cell border-box-sizing code_cell rendered">
-<div class="input">
-<div class="prompt input_prompt">In&nbsp;[29]:</div>
-<div class="inner_cell">
-    <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="k">if</span> <span class="n">VERBOSE</span><span class="p">:</span>
-    <span class="nb">print</span><span class="p">(</span><span class="s2">"Number of answers:"</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">soup</span><span class="o">.</span><span class="n">select</span><span class="p">(</span><span class="s2">"#answers .card"</span><span class="p">)))</span>
-</pre></div>
-
-    </div>
-</div>
-</div>
-
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
 <div class="prompt input_prompt">In&nbsp;[30]:</div>
 <div class="inner_cell">
     <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="o">%%capture</span>
-<span class="n">answers</span> <span class="o">=</span> <span class="p">[]</span>
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">answers</span> <span class="o">=</span> <span class="p">[]</span>
+<span class="n">answer_cards</span> <span class="o">=</span> <span class="n">soup</span><span class="o">.</span><span class="n">select</span><span class="p">(</span><span class="s2">"#answers .card"</span><span class="p">)</span>
 
-<span class="k">for</span> <span class="n">a</span> <span class="ow">in</span> <span class="n">soup</span><span class="o">.</span><span class="n">select</span><span class="p">(</span><span class="s2">"#answers .card"</span><span class="p">):</span>
+<span class="k">if</span> <span class="n">VERBOSE</span><span class="p">:</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">"Number of answers:"</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">answer_cards</span><span class="p">))</span>
+
+<span class="k">for</span> <span class="n">a</span> <span class="ow">in</span> <span class="n">tqdm</span><span class="p">(</span><span class="n">answer_cards</span><span class="p">,</span> <span class="n">desc</span><span class="o">=</span><span class="s1">'Answers'</span><span class="p">,</span>
+              <span class="n">total</span><span class="o">=</span><span class="nb">len</span><span class="p">(</span><span class="n">answer_cards</span><span class="p">),</span> <span class="n">dynamic_ncols</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">miniters</span><span class="o">=</span><span class="mi">1</span><span class="p">):</span>
     <span class="n">time</span><span class="o">.</span><span class="n">sleep</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">randint</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">4</span><span class="p">))</span>  <span class="c1"># rate limit just in case, be kind</span>
     <span class="n">a_url</span> <span class="o">=</span> <span class="n">urllib</span><span class="o">.</span><span class="n">parse</span><span class="o">.</span><span class="n">urljoin</span><span class="p">(</span><span class="n">base_URL</span><span class="p">,</span> <span class="n">a</span><span class="o">.</span><span class="n">select_one</span><span class="p">(</span><span class="s2">"a"</span><span class="p">)</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"href"</span><span class="p">))</span>
     <span class="n">a_html_id</span> <span class="o">=</span> <span class="s2">"#</span><span class="si">{}</span><span class="s2">"</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
         <span class="n">urllib</span><span class="o">.</span><span class="n">parse</span><span class="o">.</span><span class="n">urlparse</span><span class="p">(</span><span class="n">a_url</span><span class="p">)</span><span class="o">.</span><span class="n">fragment</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s2">"-"</span><span class="p">,</span><span class="s2">"_"</span><span class="p">))</span>
-    <span class="n">response</span> <span class="o">=</span> <span class="n">raise_on_failure</span><span class="p">(</span><span class="n">session</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">a_url</span><span class="p">))</span>
+    <span class="n">response</span> <span class="o">=</span> <span class="n">raise_on_failure</span><span class="p">(</span><span class="n">session</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">a_url</span><span class="p">),</span> <span class="n">silent</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
     <span class="n">q_soup</span> <span class="o">=</span> <span class="n">BeautifulSoup</span><span class="p">(</span><span class="n">response</span><span class="o">.</span><span class="n">text</span><span class="p">)</span>
     <span class="n">a_soup</span> <span class="o">=</span> <span class="n">q_soup</span><span class="o">.</span><span class="n">select_one</span><span class="p">(</span><span class="n">a_html_id</span><span class="p">)</span>
     <span class="n">answers</span><span class="o">.</span><span class="n">append</span><span class="p">({</span>
@@ -13971,6 +13991,9 @@ Notebook START time: 2022-08-20 10:17:16.118253 UTC
     <span class="p">})</span>
     <span class="k">if</span> <span class="n">QUICK_DEBUG_RUN</span><span class="p">:</span>
         <span class="k">break</span>
+
+<span class="k">if</span> <span class="ow">not</span> <span class="n">VERBOSE</span><span class="p">:</span>
+    <span class="n">clear_output</span><span class="p">()</span>
 </pre></div>
 
     </div>
@@ -14020,7 +14043,7 @@ Notebook START time: 2022-08-20 10:17:16.118253 UTC
 <li>Time of the activity</li>
 <li>URL or the relevant activity</li>
 </ul>
-<p>Data collected in this section is saved locally into the <code>data/"User ID"/activity.json</code> file.</p>
+<p>Data collected in this section is saved locally into the <code>data/&quot;User ID&quot;/activity.json</code> file.</p>
 
 </div>
 </div>
@@ -14091,7 +14114,7 @@ Notebook START time: 2022-08-20 10:17:16.118253 UTC
 </ul>
 </li>
 </ul>
-<p>Data collected in this section is saved locally into the <code>data/"User ID"/votes.json</code> file.</p>
+<p>Data collected in this section is saved locally into the <code>data/&quot;User ID&quot;/votes.json</code> file.</p>
 
 </div>
 </div>
@@ -14465,9 +14488,11 @@ Notebook START time: 2022-08-20 10:17:16.118253 UTC
 <div class="prompt input_prompt">In&nbsp;[51]:</div>
 <div class="inner_cell">
     <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="o">%%capture</span> --no-display
-<span class="n">calplot</span><span class="o">.</span><span class="n">calplot</span><span class="p">(</span><span class="n">question_events</span><span class="p">,</span> <span class="n">how</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">suptitle</span><span class="o">=</span><span class="s2">"Questions Asked"</span><span class="p">,</span>
-                <span class="n">colorbar</span><span class="o">=</span><span class="n">question_events</span><span class="o">.</span><span class="n">max</span><span class="p">()</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">)</span>
+<div class=" highlight hl-ipython3"><pre><span></span><span class="k">with</span> <span class="n">redirect_stderr</span><span class="p">(</span><span class="n">io</span><span class="o">.</span><span class="n">StringIO</span><span class="p">())</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+    <span class="n">calplot</span><span class="o">.</span><span class="n">calplot</span><span class="p">(</span><span class="n">question_events</span><span class="p">,</span> <span class="n">how</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">suptitle</span><span class="o">=</span><span class="s2">"Questions Asked"</span><span class="p">,</span>
+                    <span class="n">colorbar</span><span class="o">=</span><span class="n">question_events</span><span class="o">.</span><span class="n">max</span><span class="p">()</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">)</span>
+<span class="k">if</span> <span class="n">VERBOSE</span><span class="p">:</span>
+    <span class="nb">print</span><span class="p">(</span><span class="n">f</span><span class="o">.</span><span class="n">getvalue</span><span class="p">(),</span> <span class="n">file</span><span class="o">=</span><span class="n">sys</span><span class="o">.</span><span class="n">stderr</span><span class="p">)</span>
 <span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
 </pre></div>
 
@@ -14693,9 +14718,9 @@ Notebook START time: 2022-08-20 10:17:16.118253 UTC
 
 <div class="output_subarea output_stream output_stdout output_text">
 <pre>
- ** Total Elapsed time: 0:13:14.444965 ** 
+ ** Total Elapsed time: 0:13:03.044926 ** 
 
-Notebook END time: 2022-08-20 10:30:30.563277 UTC
+Notebook END time: 2022-08-27 15:27:58.913163 UTC
 
 </pre>
 </div>
