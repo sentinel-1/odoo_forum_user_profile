@@ -40,6 +40,10 @@ import calplot
 import time
 from pathlib import Path
 import json
+import io
+import sys
+from contextlib import redirect_stderr
+from IPython.display import clear_output
 
 
 # In[4]:
@@ -49,11 +53,25 @@ VERBOSE = False
 QUICK_DEBUG_RUN = False
 
 
+# In[5]:
+
+
+import importlib
+
+if importlib.util.find_spec('ipywidgets') is not None:
+    from tqdm.auto import tqdm
+else:
+    from tqdm import tqdm
+    
+    if VERBOSE:
+        print("No ipywidgets found, using simple tqdm.")
+
+
 # # Collect data from the user account via webscraping
 # 
 # Based on the User ID and credentials provided in the `secret.json` login into the user account. Once we are logged into the users account, we have access to all its data. we collect information from the profile and save the collected data locally into the JSON files under the directory named after the User ID in the local `data` directory.
 
-# In[5]:
+# In[6]:
 
 
 with open("secret.json", "r") as f:
@@ -67,25 +85,25 @@ if (any([k not in s for k in ["user_id", "email", "password"]])
     raise Exception("Please provide your credentials first!")    
 
 
-# In[6]:
+# In[7]:
 
 
 USER_ID = s["user_id"]
 
 
-# In[7]:
+# In[8]:
 
 
 USER_EMAIL, USER_PASSWORD = s["email"], s["password"]
 
 
-# In[8]:
+# In[9]:
 
 
 user_data_dir = Path.cwd() / "data" / str(USER_ID)
 
 
-# In[9]:
+# In[10]:
 
 
 if user_data_dir.is_dir():
@@ -110,7 +128,7 @@ if VERBOSE:
 # 
 # Login into the account and simultaneously go to the profile page by sending a POST request containing the `redirect` key with the desired URI which is undersood by the Odoo backend and it takes us directly to the users profile page.
 
-# In[10]:
+# In[11]:
 
 
 base_URL = "https://www.odoo.com"
@@ -123,34 +141,34 @@ login_payload = {
 }
 
 
-# In[11]:
+# In[12]:
 
 
 session = requests.Session()
 
 
-# In[12]:
+# In[13]:
 
 
-def raise_on_failure(response):
+def raise_on_failure(response, silent=False):
     status_msg = f"HTTP response status code: {response.status_code}"
 
     if not response.ok:
         raise Exception(status_msg)
-    elif VERBOSE:
+    elif VERBOSE and not silent:
         print(status_msg)
     return response
 
 response = raise_on_failure(session.get(login_URL))
 
 
-# In[13]:
+# In[14]:
 
 
 soup = BeautifulSoup(response.text)
 
 
-# In[14]:
+# In[15]:
 
 
 csrf_input = (soup
@@ -159,26 +177,26 @@ csrf_input = (soup
              )
 
 
-# In[15]:
+# In[16]:
 
 
 login_payload['csrf_token'] = csrf_input.get("value")
 
 
-# In[16]:
+# In[17]:
 
 
 if VERBOSE:
     display({k:login_payload[k] for k in login_payload if k != "password"})
 
 
-# In[17]:
+# In[18]:
 
 
 response = raise_on_failure(session.post(login_URL, data=login_payload))
 
 
-# In[18]:
+# In[19]:
 
 
 soup = BeautifulSoup(response.text)
@@ -206,14 +224,14 @@ soup = BeautifulSoup(response.text)
 # 
 # Data collected in this section is saved locally into the `data/"User ID"/user_profile.json` file.
 
-# In[19]:
+# In[20]:
 
 
 def add_scheme_to_url(url):
     return urllib.parse.urlunparse(urllib.parse.urlparse(url, scheme="https"))
 
 
-# In[20]:
+# In[21]:
 
 
 user_profile = {
@@ -227,7 +245,7 @@ user_profile = {
 }
 
 
-# In[21]:
+# In[22]:
 
 
 user_profile["Name"] = soup.select(
@@ -317,7 +335,7 @@ if VERBOSE:
     display(user_profile)
 
 
-# In[22]:
+# In[23]:
 
 
 profile_data_file = user_data_dir/"user_profile.json"
@@ -336,7 +354,7 @@ if VERBOSE:
 # 
 # Data collected in this section is saved locally into the `data/"User ID"/user_badges.json` file.
 
-# In[23]:
+# In[24]:
 
 
 user_badges = [{
@@ -350,7 +368,7 @@ if VERBOSE:
     display(user_badges)
 
 
-# In[24]:
+# In[25]:
 
 
 with open(user_data_dir/"user_badges.json", "w") as f:
@@ -374,20 +392,48 @@ with open(user_data_dir/"user_badges.json", "w") as f:
 # 
 # Data collected in this section is saved locally into the `data/"User ID"/related_questions.json` file.
 
-# In[25]:
+# In[26]:
+
+
+related_questions = {}
+
+
+for question_section in soup.select("#questions >*"):
+    section_name = question_section.select_one("h5:first-child").text.strip()
+    related_questions[section_name] = []
+    question_cards = question_section.select(".card")
+    
+    for q in tqdm(question_cards, desc=f'Section of "{section_name}"',
+                  total=len(question_cards), dynamic_ncols=True, miniters=1):
+        time.sleep(np.random.randint(1, 4))  # rate limit just in case, be kind
+        q_url = urllib.parse.urljoin(base_URL, q.select_one("a").get("href"))
+        response = raise_on_failure(session.get(q_url), silent=True)
+        q_soup = BeautifulSoup(response.text)
+        related_questions[section_name].append({
+            "URL": q_url,
+            "time": q_soup.select_one("article time").text.strip(),
+            "votes": int(q_soup.select_one(".vote_count").text.strip()),
+            "title": q_soup.select_one("article header").text.strip(),
+            "content": str(
+                q_soup.select_one("article .o_wforum_post_content")),
+        })
+        if QUICK_DEBUG_RUN:
+            break
+    if QUICK_DEBUG_RUN:
+        break
+
+if not VERBOSE:
+    clear_output()
+
+
+# In[27]:
 
 
 if VERBOSE:
     print("Number of related questions:", len(soup.select("#questions .card")))
 
 
-# In[26]:
-
-
-get_ipython().run_cell_magic('capture', '', '\nrelated_questions = {}\n\nfor question_section in soup.select("#questions >*"):\n    section_name = question_section.select_one("h5:first-child").text.strip()\n    related_questions[section_name] = []\n\n    for q in question_section.select(".card"):\n        time.sleep(np.random.randint(1, 4))  # rate limit just in case, be kind\n        q_url = urllib.parse.urljoin(base_URL, q.select_one("a").get("href"))\n        response = raise_on_failure(session.get(q_url))\n        q_soup = BeautifulSoup(response.text)\n        related_questions[section_name].append({\n            "URL": q_url,\n            "time": q_soup.select_one("article time").text.strip(),\n            "votes": int(q_soup.select_one(".vote_count").text.strip()),\n            "title": q_soup.select_one("article header").text.strip(),\n            "content": str(\n                q_soup.select_one("article .o_wforum_post_content")),\n        })\n        if QUICK_DEBUG_RUN:\n            break\n    if QUICK_DEBUG_RUN:\n        break\n')
-
-
-# In[27]:
+# In[28]:
 
 
 if VERBOSE:
@@ -400,7 +446,7 @@ if VERBOSE:
             print("This section is empty.")
 
 
-# In[28]:
+# In[29]:
 
 
 with open(user_data_dir/"related_questions.json", "w") as f:
@@ -425,17 +471,43 @@ with open(user_data_dir/"related_questions.json", "w") as f:
 # 
 # Data collected in this section is saved locally into the `data/"User ID"/answers.json` file.
 
-# In[29]:
-
-
-if VERBOSE:
-    print("Number of answers:", len(soup.select("#answers .card")))
-
-
 # In[30]:
 
 
-get_ipython().run_cell_magic('capture', '', 'answers = []\n\nfor a in soup.select("#answers .card"):\n    time.sleep(np.random.randint(1, 4))  # rate limit just in case, be kind\n    a_url = urllib.parse.urljoin(base_URL, a.select_one("a").get("href"))\n    a_html_id = "#{}".format(\n        urllib.parse.urlparse(a_url).fragment.replace("-","_"))\n    response = raise_on_failure(session.get(a_url))\n    q_soup = BeautifulSoup(response.text)\n    a_soup = q_soup.select_one(a_html_id)\n    answers.append({\n        "URL": a_url,\n        "time": a_soup.select_one("time").text.strip(),\n        "votes": int(a_soup.select_one(".vote_count").text.strip()),\n        "accepted": "o_wforum_answer_correct" in a_soup.attrs["class"],\n        "content": str(a_soup.select_one(".o_wforum_readable")),\n        "answered_question": {\n            "time": q_soup.select_one("article time").text.strip(),\n            "votes": int(q_soup.select_one(".vote_count").text.strip()),\n            "title": q_soup.select_one("article header").text.strip(),\n            "content": str(\n                q_soup.select_one("article .o_wforum_post_content")),\n        }\n    })\n    if QUICK_DEBUG_RUN:\n        break\n')
+answers = []
+answer_cards = soup.select("#answers .card")
+
+if VERBOSE:
+    print("Number of answers:", len(answer_cards))
+
+for a in tqdm(answer_cards, desc='Answers',
+              total=len(answer_cards), dynamic_ncols=True, miniters=1):
+    time.sleep(np.random.randint(1, 4))  # rate limit just in case, be kind
+    a_url = urllib.parse.urljoin(base_URL, a.select_one("a").get("href"))
+    a_html_id = "#{}".format(
+        urllib.parse.urlparse(a_url).fragment.replace("-","_"))
+    response = raise_on_failure(session.get(a_url), silent=True)
+    q_soup = BeautifulSoup(response.text)
+    a_soup = q_soup.select_one(a_html_id)
+    answers.append({
+        "URL": a_url,
+        "time": a_soup.select_one("time").text.strip(),
+        "votes": int(a_soup.select_one(".vote_count").text.strip()),
+        "accepted": "o_wforum_answer_correct" in a_soup.attrs["class"],
+        "content": str(a_soup.select_one(".o_wforum_readable")),
+        "answered_question": {
+            "time": q_soup.select_one("article time").text.strip(),
+            "votes": int(q_soup.select_one(".vote_count").text.strip()),
+            "title": q_soup.select_one("article header").text.strip(),
+            "content": str(
+                q_soup.select_one("article .o_wforum_post_content")),
+        }
+    })
+    if QUICK_DEBUG_RUN:
+        break
+
+if not VERBOSE:
+    clear_output()
 
 
 # In[31]:
@@ -739,7 +811,12 @@ if VERBOSE:
 # In[51]:
 
 
-get_ipython().run_cell_magic('capture', '--no-display', 'calplot.calplot(question_events, how=None, suptitle="Questions Asked",\n                colorbar=question_events.max() > 1)\nplt.show()\n')
+with redirect_stderr(io.StringIO()) as f:
+    calplot.calplot(question_events, how=None, suptitle="Questions Asked",
+                    colorbar=question_events.max() > 1)
+if VERBOSE:
+    print(f.getvalue(), file=sys.stderr)
+plt.show()
 
 
 # ## Answers Given
